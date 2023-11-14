@@ -96,20 +96,3 @@ while is_game_state == 'running':
     next_direction()
 
     is_game_state = play_again()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
