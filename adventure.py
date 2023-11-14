@@ -10,14 +10,16 @@ def print_pause(message, wait_time):
 def fight(weapon_choice):
     print_pause(f"The {enemy} attacks you!", 2)
     if weapon_choice == "dagger":
-        print_pause(f"You feel a bit under-prepared for this, what with only having a tiny {weapon_choice}.", 2)
+        print_pause(f"You feel a bit under-prepared for this,\
+                    what with only having a tiny {weapon_choice}.", 2)
     choice = ''
     while choice not in ['1', '2']:
         choice = input("Would you like to (1) fight or (2) run away?")
         if choice == '1':
             if weapon_choice == "dagger":
                 print_pause(f"You do your best...", 1)
-                print_pause(f"but your {weapon_choice} is no match for the {enemy}.", 2)
+                print_pause(f"but your {weapon_choice} is \
+                            no match for the {enemy}.", 2)
                 print_pause(f"You have been defeated!", 2)
             elif weapon_choice == "sword":
                 print_pause(f"As the {enemy} moves to attack," +
@@ -55,7 +57,8 @@ def intro():
                 "and has been terrifying the nearby village.", 3)
     print_pause("In front of you is a house.", 2)
     print_pause("To your right is a dark cave.", 2)
-    print_pause(f"In your hand you hold your trusty (but not very effective) {weapon_choice}.", 2)
+    print_pause(f"In your hand you hold your trusty \
+                (but not very effective) {weapon_choice}.", 2)
 
 
 def next_direction():
@@ -78,7 +81,8 @@ def next_direction():
 
 def house():
     print_pause("You approach the door of the house.", 2)
-    print_pause(f"You are about to knock when the door opens and out steps a {enemy}.", 2)
+    print_pause(f"You are about to knock when \
+                the door opens and out steps a {enemy}.", 2)
     print_pause(f"Eep! This is the {enemy}'s house!", 2)
     fight(weapon_choice)
 
