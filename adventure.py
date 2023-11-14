@@ -12,27 +12,29 @@ def fight(weapon_choice):
     if weapon_choice == "dagger":
         print_pause(f"You feel a bit under-prepared for this," +
                     "what with only having a tiny {weapon_choice}.", 2)
-    choice = input("Would you like to (1) fight or (2) run away?")
-    if choice == '1':
-        if weapon_choice == "dagger":
-            print_pause(f"You do your best...", 1)
-            print_pause(f"but your {weapon_choice}" +
-                        "is no match for the {enemy}.", 2)
-            print_pause(f"You have been defeated!""", 2)
-        elif weapon_choice == "sword":
-            print_pause(f"As the {enemy} moves to attack," +
-                        "you unsheath your new sword.", 2)
-            print_pause(f"The Sword of Ogoroth shines" +
-                        "brightly in your hand as" +
-                        "you brace yourself for the attack.", 3)
-            print_pause(f"But the {enemy} takes one look at" +
-                        "your shiny new toy and runs away!", 3)
-            print_pause(f"You have rid the town of the {enemy}." +
-                        "You are victorious!", 3)
-    elif choice == '2':
-        print_pause("You run back into the field." +
-                    "Luckily, you don't seem to have been followed.", 2)
-        next_direction()
+    choice = ''
+    while choice not in ['1', '2']:
+        choice = input("Would you like to (1) fight or (2) run away?")
+        if choice == '1':
+            if weapon_choice == "dagger":
+                print_pause(f"You do your best...", 1)
+                print_pause(f"but your {weapon_choice}" +
+                            "is no match for the {enemy}.", 2)
+                print_pause(f"You have been defeated!""", 2)
+            elif weapon_choice == "sword":
+                print_pause(f"As the {enemy} moves to attack," +
+                            "you unsheath your new sword.", 2)
+                print_pause(f"The Sword of Ogoroth shines" +
+                            "brightly in your hand as" +
+                            "you brace yourself for the attack.", 3)
+                print_pause(f"But the {enemy} takes one look at" +
+                            "your shiny new toy and runs away!", 3)
+                print_pause(f"You have rid the town of the {enemy}." +
+                            "You are victorious!", 3)
+        elif choice == '2':
+            print_pause("You run back into the field." +
+                        "Luckily, you don't seem to have been followed.", 2)
+            next_direction()
 
 
 def play_again():
