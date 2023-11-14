@@ -1,138 +1,136 @@
 import random
 
-class Player:
-    moves = ['rock', 'paper', 'scissors']
+moves = ['rock', 'paper', 'scissors']
 
-    def __init__(self):
-        # initialization of the list for the move function
-        # in the class PlayerCycle
-        self.my_move = self.moves
-        # random choise for first round
-        self.their_move = random.choice(self.moves)
+
+def beats(one, two):
+
+    return ((one == 'rock' and two == 'scissors') or
+            (one == 'scissors' and two == 'paper') or
+            (one == 'paper' and two == 'rock'))
+
+
+class Player:
+    def move(self):
+        return 'rock'
 
     def learn(self, my_move, their_move):
-        # moves of the players stored
-        self.my_move = my_move
-        self.their_move = their_move
+        pass
 
 
-class ComputerPlayer(Player):
+class RandomPlayer(Player):
     def move(self):
-        # random move
-        return random.choice(self.moves)
+        return (random.choice(moves))
+
+    def learn(self, my_move, their_move):
+        pass
+
+
+class HumanPlayer(Player):
+    def move(self):
+        answer = input("""Choose your move - Rock, Paper or """
+                       """Scissors? To exit press x\n""")
+        answer = answer.lower()
+        while answer not in moves and answer != 'x':
+            answer = input("Enter a valid move!")
+        if answer == 'x':
+            exit()
+        return answer
+
+    def learn(self, my_move, their_move):
+        pass
 
 
 class ReflectPlayer(Player):
-    def move(self):
-        # reflects the choice of the previous round
-        return self.their_move
 
+    def __init__(self):
+        Player.__init__(self)
+        self.their_move = None
 
-class PlayerCycle(Player):
+    def learn(self, my_move, their_move):
+        self.their_move = their_move
+
     def move(self):
-        # choses a different move of the last round
-        if self.my_move == self.moves[0]:
-            return self.moves[1]
-        elif self.my_move == self.moves[1]:
-            return self.moves[2]
+        if self.their_move is None:
+            return (random.choice(moves))
         else:
-            return self.moves[0]
+            return self.their_move
 
 
-class Human(Player):
+class CyclePlayer(Player):
+
+    def __init__(self):
+        Player.__init__(self)
+        self.last_move = None
+
     def move(self):
-        # repeats the input statement until there is
-        # a match with the list or exit
-        while True:
-            move_human = input("Rock, paper, scissors? > ")
-            if move_human.lower() in self.moves:
-                return move_human.lower()
-            elif move_human.lower() == 'exit':
-                exit()
+        move = None
+        if self.last_move is None:
+            move = Player.move(self)
+        else:
+            index = moves.index(self.last_move) + 1
+            if index >= len(moves):
+                index = 0
+            move = moves[index]
+        self.last_move = move
+        return move
+
+    def learn(self, my_move, their_move):
+        pass
 
 
-class GamePlay:
-    def __init__(self, p1, p2):
-        self.p1 = p1
-        self.p2 = p2
-        # scores initialization
-        self.score_p1 = 0
-        self.score_p2 = 0
+class Game:
 
-    def beats(self, one, two):
-        return ((one == 'rock' and two == 'scissors') or
-                (one == 'scissors' and two == 'paper') or
-                (one == 'paper' and two == 'rock'))
-
-    def rounds(self):
-        # repeats the input statement until there is
-        # a valid choose or exit
-        while True:
-            self.number_rounds = input(
-                "How many rounds do you want want play? > ")
-            if self.number_rounds.isdigit():
-                return self.number_rounds
-            elif self.number_rounds.lower() == 'exit':
-                exit()
+    def __init__(self, RandomPlayer, HumanPlayer):
+        self.RandomPlayer = RandomPlayer
+        self.HumanPlayer = HumanPlayer
+        self.count_wins = 0
+        self.count_losses = 0
+        self.count_ties = 0
 
     def play_round(self):
-        # move
-        move1 = self.p1.move()
-        move2 = self.p2.move()
-        # result of the match and storing player score
-        if self.beats(move1, move2):
-            self.score_p1 += 1
-            winner = '**** PLAYER ONE WINS ****'
+        move1 = self.RandomPlayer.move()
+        move2 = self.HumanPlayer.move()
+        print(f"Player 1 Move: {move1}  Player 2 Move: {move2}")
+
+        if beats(move1, move2):
+            self.count_wins += 1
+            print(f"wins:{self.count_wins}")
         elif move1 == move2:
-            self.score_p1 = self.score_p1
-            self.score_p2 = self.score_p2
-            winner = '**** TIE ****'
+            self.count_ties += 1
+            print(f"ties:{self.count_ties}")
+        elif beats(move2, move1):
+            self.count_losses += 1
+            print(f"losses:{self.count_losses}")
         else:
-            self.score_p2 += 1
-            winner = '**** PLAYER TWO WINS ****'
-        # output the match information
-        print(
-            f"> You played : {move1}"
-            f"\n> Opponent played : {move2}"
-            f"\n{winner}"
-            f"\nScore: Player one ( {self.score_p1} ),"
-            f"Player two ( {self.score_p2} )"
-        )
-        self.p1.learn(move1, move2)
-        self.p2.learn(move2, move1)
+            print("tada mistake")
+
+        self.score1 = self.count_wins
+        self.score2 = self.count_wins
+        print(f"""Player One Score: {self.count_wins} """
+              f"""Player Two Score: {self.count_losses}\n""")
+
+        self.RandomPlayer.learn(move1, move2)
+        self.HumanPlayer.learn(move2, move1)
 
     def play_game(self):
-        print(
-            ">>>> GamePlay start! <<<<"
-            "\n(If do you want exit game, please digits \'exit\'"
-            " when the game will ask you the number of rounds or your move)"
-        )
-        self.rounds()
-        for round in range(int(self.number_rounds)):
-            print(f"\nRound {round + 1} --")
+        print("Game start!")
+        for i in range(10):
+            currentRound = i  # this sets the currentRound pointer to the
+            # current i or index
+            print(f"Round {currentRound}:")
             self.play_round()
-        if self.score_p1 == self.score_p2:
-            print(
-                f"\n---- The game ended in a tie! ----"
-                f"\nScore: Player one ( {self.score_p1} ),"
-                f"Player two ( {self.score_p2} )"
-            )
-        elif self.score_p1 > self.score_p2:
-            print(
-                f"\n---- Player ONE has won! ----"
-                f"\nScore: Player one ( {self.score_p1} )*,"
-                f"Player two ( {self.score_p2} )"
-            )
+        print("\nThanks for playing")
+        print(f"""Final Tallies\nPlayer One Points: {self.count_wins} """
+              f""" Player Two Points: {self.count_losses}""")
+        if self.count_wins > self.count_losses:
+            print("Player One is Victorious\n")
+        elif self.count_wins < self.count_losses:
+            print("Player Two is Victorious\n")
         else:
-            print(
-                f"\n---- Player TWO has won! ----"
-                f"\nScore: Player one ( {self.score_p1} ),"
-                f"Player two ( {self.score_p2} )*"
-            )
+            print("Nobody is the Victor - Tie Game\n")
 
 
 if __name__ == '__main__':
-    # organize the game with a human player and randomly choose an attitude from the other player
-    game = GamePlay(Human(), random.choice(
-        [ComputerPlayer(), ReflectPlayer(), PlayerCycle()]))
+    game = Game(HumanPlayer(), RandomPlayer())
     game.play_game()
