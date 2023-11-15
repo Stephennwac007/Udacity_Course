@@ -18,7 +18,7 @@ in this game"""
 
 class Player:
     def choose(self):
-        return 'rock'
+        return items[0]
 
     def learn(self, player_move, opp_move):
         pass
@@ -26,7 +26,8 @@ class Player:
 
 class ComputerPlayer(Player):
     def choose(self):
-        return (random.choice(items))
+        i = random.randint(0, len(items) - 1)
+        return (items[i])
 
     def learn(self, player_move, opp_move):
         pass
@@ -34,13 +35,18 @@ class ComputerPlayer(Player):
 
 class HumanPlayer(Player):
     def choose(self):
-        response = input("""Make your choice : Rock 🪨, Paper 📰 or """
-                         """Scissors ✂️ ? \nDo you want to exit """
-                         """from the game, press [x]\n""").lower()
-        while response not in items and response != 'x':
-            response = input("Please Enter a valid choice! 😃 \n")
-        if response == 'x':
-            exit()
+        while True:
+            try:
+                response = input("""Make your choice : Rock 🪨, Paper 📰 or """
+                                 """Scissors ✂️ ? \nDo you want to exit """
+                                 """from the game, press [x]\n""").lower()
+                if response != 'x' and response in items:
+                    break
+                else:
+                    raise Exception
+            except Exception as e:
+                print_pause("Please enter a valid choice among items", 0)
+
         return response
 
     def learn(self, player_move, opp_move):
@@ -51,14 +57,15 @@ class ReflectPlayer(Player):
 
     def __init__(self):
         Player.__init__(self)
-        self.opp_move = None
+        self.opp_move = ""
 
     def learn(self, player_move, opp_move):
         self.opp_move = opp_move
 
     def choose(self):
-        if self.opp_move is None:
-            return (random.choice(items))
+        if self.opp_move == "":
+            i = random.randint(0, len(items) - 1)
+            return items[i]
         else:
             return self.opp_move
 
@@ -67,18 +74,18 @@ class CyclePlayer(Player):
 
     def __init__(self):
         Player.__init__(self)
-        self.last_move = None
+        self.cycle_move = ""
 
     def choose(self):
-        choose = None
-        if self.last_move is None:
+        choose = ""
+        if self.cycle_move == "":
             choose = Player.move(self)
         else:
-            index = items.index(self.last_move) + 1
+            index = items.index(self.cycle_move) + 1
             if index >= len(items):
                 index = 0
             choose = items[index]
-        self.last_move = choose
+        self.cycle_move = choose
         return choose
 
     def learn(self, player_move, opp_move):
