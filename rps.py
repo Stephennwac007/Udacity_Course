@@ -42,6 +42,8 @@ class HumanPlayer(Player):
                                  """from the game, press [x]\n""").lower()
                 if response != 'x' and response in items:
                     break
+                elif response == "x":
+                    exit()
                 else:
                     raise Exception
             except Exception as e:
