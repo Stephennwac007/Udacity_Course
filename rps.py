@@ -1,9 +1,14 @@
+"""This program plays a game of Rock, Paper, Scissors between two Players,
+and reports both Player's scores each round."""
 import random
 
 moves = ['rock', 'paper', 'scissors']
 
+"""The Player class is the parent class for all of the Players
+in this game"""
 
-def beats(one, two):
+
+def defeats(one, two):
 
     return ((one == 'rock' and two == 'scissors') or
             (one == 'scissors' and two == 'paper') or
@@ -18,7 +23,7 @@ class Player:
         pass
 
 
-class RandomPlayer(Player):
+class ComputerPlayer(Player):
     def move(self):
         return (random.choice(moves))
 
@@ -28,11 +33,11 @@ class RandomPlayer(Player):
 
 class HumanPlayer(Player):
     def move(self):
-        answer = input("""Choose your move - Rock, Paper or """
-                       """Scissors? To exit press x\n""")
+        answer = input("""Choose your move ==> Rock 🪨, Paper 📰 or """
+                       """Scissors ✂️ ? To exit from the game, press [x]\n""")
         answer = answer.lower()
         while answer not in moves and answer != 'x':
-            answer = input("Enter a valid move!")
+            answer = input("Please Enter a valid move! 😃")
         if answer == 'x':
             exit()
         return answer
@@ -79,58 +84,58 @@ class CyclePlayer(Player):
         pass
 
 
-class Game:
+class GameSession:
 
-    def __init__(self, RandomPlayer, HumanPlayer):
-        self.RandomPlayer = RandomPlayer
+    def __init__(self, ComputerPlayer, HumanPlayer):
+        self.ComputerPlayer = ComputerPlayer
         self.HumanPlayer = HumanPlayer
         self.count_wins = 0
         self.count_losses = 0
         self.count_ties = 0
 
     def play_round(self):
-        move1 = self.RandomPlayer.move()
+        move1 = self.ComputerPlayer.move()
         move2 = self.HumanPlayer.move()
-        print(f"Player 1 Move: {move1}  Player 2 Move: {move2}")
+        print(f"Player 1 Move => {move1}  Player 2 Move => {move2}")
 
-        if beats(move1, move2):
+        if defeats(move1, move2):
             self.count_wins += 1
             print(f"wins:{self.count_wins}")
         elif move1 == move2:
             self.count_ties += 1
             print(f"ties:{self.count_ties}")
-        elif beats(move2, move1):
+        elif defeats(move2, move1):
             self.count_losses += 1
             print(f"losses:{self.count_losses}")
         else:
-            print("tada mistake")
+            print("sorry! something went wrong 😕")
 
         self.score1 = self.count_wins
         self.score2 = self.count_wins
-        print(f"""Player One Score: {self.count_wins} """
-              f"""Player Two Score: {self.count_losses}\n""")
+        print(f"""Player 1 Score: {self.count_wins} """
+              f"""Player 2 Score: {self.count_losses}\n""")
 
-        self.RandomPlayer.learn(move1, move2)
+        self.ComputerPlayer.learn(move1, move2)
         self.HumanPlayer.learn(move2, move1)
 
-    def play_game(self):
-        print("Game start!")
-        for i in range(10):
-            currentRound = i  # this sets the currentRound pointer to the
-            # current i or index
+    def start_game(self):
+        print("Game start! 🎮")
+        for j in range(10):
+            currentRound = j  # sets the currentRound pointer to the
+            # current j / index
             print(f"Round {currentRound}:")
             self.play_round()
-        print("\nThanks for playing")
-        print(f"""Final Tallies\nPlayer One Points: {self.count_wins} """
-              f""" Player Two Points: {self.count_losses}""")
+        print("\nThanks for playing your game 🤝")
+        print(f"""Final Tallies\nPlayer 1 Points: {self.count_wins} """
+              f""" Player 2 Points: {self.count_losses}""")
         if self.count_wins > self.count_losses:
-            print("Player One is Victorious\n")
+            print("Player 1 is Wins!!! 😹\n")
         elif self.count_wins < self.count_losses:
-            print("Player Two is Victorious\n")
+            print("Player 2 is Wins!!! 😹\n")
         else:
-            print("Nobody is the Victor - Tie Game\n")
+            print("It is a DRAW -- Tie Game 😥\n")
 
 
 if __name__ == '__main__':
-    game = Game(HumanPlayer(), RandomPlayer())
-    game.play_game()
+    game = GameSession(HumanPlayer(), ComputerPlayer())
+    game.start_game()
